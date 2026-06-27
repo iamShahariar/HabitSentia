@@ -366,18 +366,39 @@ body::after {
 .page-view.active { display: flex; flex-direction: column; }
 /* ══ HABITS PAGE ══ */
 #page-habits { padding: 22px; gap: 18px; }
-.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); gap: 13px; flex-shrink: 0; }
-.summary-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition); position: relative; overflow: hidden; cursor: default; box-shadow: var(--shadow-card); }
-.summary-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 100px; height: 100px; border-radius: 50%; background: var(--card-accent, var(--accent-1)); opacity: 0.07; transition: var(--transition); }
+/* CHANGE 1 & 2: Summary cards are now half height (compact) and NOT sticky — they scroll with page */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr));
+  gap: 8px;
+  flex-shrink: 0;
+  /* removed position:sticky so cards scroll away with content */
+}
+.summary-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  box-shadow: var(--shadow-card);
+}
+.summary-card::before { content: ''; position: absolute; top: -20px; right: -20px; width: 55px; height: 55px; border-radius: 50%; background: var(--card-accent, var(--accent-1)); opacity: 0.07; transition: var(--transition); }
 .summary-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0.02), transparent); pointer-events: none; }
-.summary-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); border-color: var(--border-bright); }
-.summary-card:hover::before { opacity: 0.15; transform: scale(1.35); }
-.summary-card-icon { font-size: 22px; }
-.summary-card-value { font-family: 'Poppins', sans-serif; font-size: 30px; font-weight: 800; color: var(--card-color, var(--accent-1)); text-align: center; }
-.summary-card-label { font-size: 11.5px; color: var(--text-muted); font-weight: 500; text-align: center; }
+.summary-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.10); border-color: var(--border-bright); }
+.summary-card:hover::before { opacity: 0.13; transform: scale(1.2); }
+.summary-card-icon { font-size: 15px; flex-shrink: 0; }
+.summary-card-value { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 800; color: var(--card-color, var(--accent-1)); }
+.summary-card-label { font-size: 10px; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
 /* ══ TABLE ══ */
 .table-wrapper { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; flex: 1; display: flex; flex-direction: column; box-shadow: var(--shadow-card); }
-.table-scroll { overflow-x: auto; overflow-y: auto; flex: 1; max-height: calc(100vh - 320px); }
+.table-scroll { overflow-x: auto; overflow-y: auto; flex: 1; max-height: calc(100vh - 220px); }
 .habit-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .habit-table thead { position: sticky; top: 0; z-index: 10; }
 .habit-table thead tr { background: rgba(248,248,255,0.98); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
@@ -754,7 +775,17 @@ body::after {
 .notes-mode-btn { padding: 6px 14px; border-radius: 7px; border: none; background: transparent; color: var(--text-muted); font-size: 12px; font-weight: 600; cursor: pointer; transition: var(--transition); }
 .notes-mode-btn.active { background: var(--gradient-hero); color: white; box-shadow: 0 2px 10px rgba(124,92,218,0.28); }
 .notes-pin-btn.pinned { color: var(--accent-5); border-color: rgba(217,119,6,0.4); background: rgba(217,119,6,0.08); }
+/* CHANGE 3: notes-editor-area cursor pointer hint removed; double-click handled in JS */
 .notes-editor-area { flex: 1; overflow-y: auto; padding: 30px 50px 60px; }
+/* CHANGE 3: preview overlay hint — show a subtle "double-click to edit" hint when in preview */
+.notes-preview-hint {
+  display: block;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-style: italic;
+  user-select: none;
+}
 .notes-title-input { width: 100%; border: none; outline: none; background: transparent; font-family: 'Poppins', sans-serif; font-size: 30px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px; text-align: left; }
 .notes-title-input::placeholder { color: var(--text-muted); opacity: 0.5; }
 .notes-meta-line { font-size: 11px; color: var(--text-muted); margin-bottom: 22px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
@@ -939,13 +970,13 @@ body::after {
           </select>
         </div>
         <button class="btn btn-primary" onclick="openAddHabit()" id="add-habit-btn">
-          <span>＋</span> Add Habit
+          <span>+</span> Add Habit
         </button>
         <button class="btn btn-secondary" onclick="switchPage('managecols')" id="manage-cols-btn" style="display:none">
           🧱 Manage Columns
         </button>
         <button class="btn btn-secondary" onclick="openAddColumnModal()" id="add-col-btn" style="display:none">
-          ＋ Add Column
+          + Add Column
         </button>
       </div>
     </header>
@@ -1007,7 +1038,7 @@ body::after {
             <div class="empty-state-icon">🌱</div>
             <h3>No habits yet!</h3>
             <p>Click "Add Habit" to start building your daily routine and tracking your progress.</p>
-            <button class="btn btn-primary" onclick="openAddHabit()" style="margin-top:10px">＋ Add Your First Habit</button>
+            <button class="btn btn-primary" onclick="openAddHabit()" style="margin-top:10px">+ Add Your First Habit</button>
           </div>
         </div>
         <div class="table-footer">
@@ -1019,7 +1050,7 @@ body::after {
     <div class="page-view" id="page-managecols">
       <div class="managecols-header-row">
         <h2>🧱 Manage Columns</h2>
-        <button class="btn btn-primary btn-sm" onclick="openAddColumnModal()">＋ Add Column</button>
+        <button class="btn btn-primary btn-sm" onclick="openAddColumnModal()">+ Add Column</button>
       </div>
       <div style="font-size:12.5px;color:var(--text-muted);line-height:1.6;max-width:640px">
         Rename, reorder, or delete columns on your Habit Tracker table. Core columns can be renamed but not deleted. Custom columns you add can be fully edited or removed. Deleting a column asks for double confirmation since it permanently removes that data from every habit.
@@ -1048,7 +1079,7 @@ body::after {
                 <option value="high">🔴 High</option>
               </select>
               <input type="date" class="form-input" id="todo-new-due">
-              <button class="btn btn-primary" onclick="addTodo()">＋ Add Task</button>
+              <button class="btn btn-primary" onclick="addTodo()">+ Add Task</button>
             </div>
           </div>
         </div>
@@ -1085,7 +1116,7 @@ body::after {
       <div class="notes-shell">
         <div class="notes-sidebar">
           <div class="notes-sidebar-top">
-            <button class="btn btn-primary notes-new-btn" onclick="createNote()">＋ New Note</button>
+            <button class="btn btn-primary notes-new-btn" onclick="createNote()">+ New Note</button>
             <input type="text" class="notes-search-input" id="notes-search-input" placeholder="🔍 Search notes..." oninput="renderNotesList()">
           </div>
           <div class="notes-list-scroll" id="notes-list-scroll"></div>
@@ -1095,7 +1126,7 @@ body::after {
             <div class="notes-main-empty-icon">🗒️</div>
             <h3 style="font-size:18px;font-weight:700;color:var(--text-secondary)">No note selected</h3>
             <p style="font-size:13px;max-width:280px;text-align:center;line-height:1.6">Select a note from the left, or create a new one to start writing in Markdown — just like a Notion page.</p>
-            <button class="btn btn-primary" onclick="createNote()">＋ Create Your First Note</button>
+            <button class="btn btn-primary" onclick="createNote()">+ Create Your First Note</button>
           </div>
           <div id="notes-editor-wrap" style="display:none;flex-direction:column;flex:1;min-height:0">
             <div class="notes-toolbar">
@@ -1128,8 +1159,8 @@ body::after {
               <button class="notes-tb-btn" onclick="duplicateNote()" title="Duplicate Note">⧉</button>
               <button class="notes-tb-btn" onclick="deleteNotePrompt()" title="Delete Note">🗑️</button>
               <div class="notes-mode-toggle">
-                <button class="notes-mode-btn active" id="notes-mode-write" onclick="setNoteMode('write')">✏️ Write</button>
-                <button class="notes-mode-btn" id="notes-mode-preview" onclick="setNoteMode('preview')">👁️ Preview</button>
+                <button class="notes-mode-btn" id="notes-mode-write" onclick="setNoteMode('write')">✏️ Write</button>
+                <button class="notes-mode-btn active" id="notes-mode-preview" onclick="setNoteMode('preview')">👁️ Preview</button>
               </div>
             </div>
             <div class="notes-editor-area" id="notes-editor-area">
@@ -1141,7 +1172,6 @@ body::after {
               </div>
               <div class="notes-tags-row" id="notes-tags-row"></div>
               <textarea class="notes-markdown-textarea" id="notes-markdown-textarea" placeholder="Start writing in Markdown...
-
 # Heading
 **bold** _italic_ ~~strikethrough~~
 - bullet list
@@ -1309,7 +1339,7 @@ let DB = {
     todoFilter: "all",
     columnLabels: {},
     activeNoteId: null,
-    noteMode: "write"
+    noteMode: "preview"   // CHANGE 3: default mode is now preview
   },
   archivedDays: {}
 };
@@ -1350,7 +1380,7 @@ function deadlineStatus(dl) {
   if (diff <= 3) return { cls:'soon', text: diff===0 ? 'Today' : `${diff}d left` };
   return { cls:'ok', text:`${diff}d left` };
 }
-// ── URL Linkify Helper (for Habit pages, Add/Edit, Notes, To-Do, Reminders) ──
+// ── URL Linkify Helper ────────────────────────────────────────────
 function linkify(str) {
   if (!str) return '';
   const escaped = escHtml(str);
@@ -1385,6 +1415,8 @@ function loadData() {
       if (!DB.notes) DB.notes = [];
       if (!DB.customColumns) DB.customColumns = [];
       if (!DB.settings.columnLabels) DB.settings.columnLabels = {};
+      // CHANGE 3: ensure noteMode defaults to 'preview' for existing saves that stored 'write'
+      if (!DB.settings.noteMode) DB.settings.noteMode = 'preview';
       if (DB.lastSaved) {
         const el = document.getElementById('last-saved-time');
         if (el) el.textContent = new Date(DB.lastSaved).toLocaleTimeString();
@@ -1757,8 +1789,6 @@ function recoverHabit(id) {
   saveData(); renderHabits(); updateStats(); renderTrash();
   showToast('↩ Habit recovered!','success');
 }
-// FIX: permanent single-item delete from Trash now correctly removes
-// the exact item by id, re-renders, persists, and confirms with a toast.
 function permanentDeleteHabit(id) {
   if (!id) return;
   const habit = (DB.trash||[]).find(h=>h.id===id);
@@ -2071,10 +2101,10 @@ function showResetConfirm() {
 }
 // ── Toast ─────────────────────────────────────────────────────────
 function showToast(msg, type='info', duration=3000) {
-  const icons = {success:'✅',error:'❌',info:'ℹ️',warning:'⚠️'};
+  const icons = {success:'✅',error:'❌',info:'i️',warning:'⚠️'};
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  toast.innerHTML = `<span>${icons[type]||'i️'}</span><span>${msg}</span>`;
   document.getElementById('toast-container').appendChild(toast);
   setTimeout(()=>{ toast.classList.add('out'); setTimeout(()=>toast.remove(),350); }, duration);
 }
@@ -2110,7 +2140,7 @@ function updateSortSelect() { const sel=document.getElementById('sort-select'); 
 function openAddColumnModal() {
   document.getElementById('modal-container').innerHTML = `
     <div class="modal-header">
-      <h2 class="modal-title">＋ Add New Column</h2>
+      <h2 class="modal-title">+ Add New Column</h2>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="form-grid">
@@ -2121,7 +2151,7 @@ function openAddColumnModal() {
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmAddColumn()">＋ Add Column</button>
+      <button class="btn btn-primary" onclick="confirmAddColumn()">+ Add Column</button>
     </div>`;
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -2166,7 +2196,6 @@ function confirmRenameColumn(key, isCustom) {
   saveData(); closeModal(); renderHabits(); renderManageColumns();
   showToast('✏️ Column renamed','success');
 }
-// Deleting a column ALWAYS requires double confirmation, per request.
 function deleteCustomColumn(id) {
   const col = DB.customColumns.find(c=>c.id===id); if (!col) return;
   showDoubleConfirm(
@@ -2380,7 +2409,7 @@ function saveTodoEdit(id) {
 }
 function clearCompletedTodos() {
   const doneCount = DB.todos.filter(t=>t.done).length;
-  if (doneCount===0) { showToast('ℹ️ No completed tasks to clear','info'); return; }
+  if (doneCount===0) { showToast('i️ No completed tasks to clear','info'); return; }
   showConfirm('🧹', `Clear <b>${doneCount}</b> completed task${doneCount!==1?'s':''}?<br><br>This cannot be undone.`, function(){
     DB.todos = DB.todos.filter(t=>!t.done);
     saveData(); renderTodos();
@@ -2412,7 +2441,6 @@ function getFilteredSortedTodos() {
   });
   if (sort==='priority') { const p={high:0,medium:1,low:2}; todos.sort((a,b)=>(p[a.priority]??3)-(p[b.priority]??3)); }
   if (sort==='created')  todos.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
-  // NEW: sort by Last Modified — most recently modified first (falls back to createdAt if never modified)
   if (sort==='modified') todos.sort((a,b)=>new Date(b.modifiedAt||b.createdAt)-new Date(a.modifiedAt||a.createdAt));
   if (sort==='alpha')    todos.sort((a,b)=>a.title.localeCompare(b.title));
   return todos;
@@ -2513,6 +2541,7 @@ function createNote() {
   };
   DB.notes.unshift(note);
   DB.settings.activeNoteId = note.id;
+  // CHANGE 3: new notes open in write mode so the user can immediately type
   DB.settings.noteMode = 'write';
   saveData();
   renderNotesList();
@@ -2526,12 +2555,15 @@ function duplicateNote() {
   const copy = { ...n, id:'n'+Date.now()+Math.random().toString(36).slice(2,7), title:(n.title?n.title+' (Copy)':''), createdAt:nowIso, modifiedAt:nowIso, tags:[...(n.tags||[])] };
   DB.notes.unshift(copy);
   DB.settings.activeNoteId = copy.id;
+  // CHANGE 3: duplicated note opens in write mode
+  DB.settings.noteMode = 'write';
   saveData(); renderNotesList(); renderNoteEditor();
   showToast('⧉ Note duplicated','success',1500);
 }
+// CHANGE 3: selectNote now always opens in preview mode
 function selectNote(id) {
   DB.settings.activeNoteId = id;
-  DB.settings.noteMode = 'write';
+  DB.settings.noteMode = 'preview';
   saveData();
   renderNotesList();
   renderNoteEditor();
@@ -2597,6 +2629,8 @@ function setNoteColor(color) {
   n.color = color; n.modifiedAt = new Date().toISOString();
   saveData(); renderNotesList(); renderNoteColorStrip();
 }
+// CHANGE 3: setNoteMode switches between write and preview
+// In preview mode, the editor area gets a dblclick listener to switch to write
 function setNoteMode(mode) {
   DB.settings.noteMode = mode;
   saveData();
@@ -2604,17 +2638,33 @@ function setNoteMode(mode) {
   const previewBtn = document.getElementById('notes-mode-preview');
   const ta   = document.getElementById('notes-markdown-textarea');
   const prev = document.getElementById('notes-preview-render');
+  const editorArea = document.getElementById('notes-editor-area');
   if (mode==='preview') {
     writeBtn.classList.remove('active'); previewBtn.classList.add('active');
     ta.style.display='none'; prev.style.display='block';
     const n = getActiveNote();
-    prev.innerHTML = n && n.body ? renderMarkdown(n.body) : `<div class="notes-preview-empty">Nothing to preview yet — write something first.</div>`;
+    // CHANGE 4: URLs in preview are clickable via renderMarkdown which calls renderInlineMd with linkify
+    prev.innerHTML = n && n.body
+      ? `<div class="notes-preview-hint">👁️ Preview — double-click anywhere to edit</div>` + renderMarkdown(n.body)
+      : `<div class="notes-preview-hint">👁️ Preview — double-click anywhere to edit</div><div class="notes-preview-empty">Nothing to preview yet — double-click to start writing.</div>`;
+    // CHANGE 3: double-click on editor area switches to write mode
+    editorArea.ondblclick = function(e) {
+      // Don't intercept clicks on links
+      if (e.target.tagName === 'A') return;
+      setNoteMode('write');
+      setTimeout(()=>{
+        const textarea = document.getElementById('notes-markdown-textarea');
+        if (textarea) textarea.focus();
+      }, 30);
+    };
   } else {
     previewBtn.classList.remove('active'); writeBtn.classList.add('active');
     prev.style.display='none'; ta.style.display='block';
+    // CHANGE 3: remove double-click listener when in write mode
+    editorArea.ondblclick = null;
   }
 }
-// ── Markdown Toolbar Helpers (wrap / prefix / insert at cursor) ───
+// ── Markdown Toolbar Helpers ──────────────────────────────────────
 function mdWrap(before, after) {
   const ta = document.getElementById('notes-markdown-textarea'); if (!ta) return;
   const start = ta.selectionStart, end = ta.selectionEnd;
@@ -2648,11 +2698,12 @@ function mdInsertBlock(before, after) {
   ta.selectionEnd   = start + before.length + selected.length;
   onNoteBodyInput();
 }
-// ── Lightweight Markdown Renderer (no external deps) ───────────────
+// ── Lightweight Markdown Renderer ─────────────────────────────────
 function escapeMdHtml(str) {
   return String(str||'')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+// CHANGE 4: renderInlineMd handles URL linkification so all preview links are clickable
 function renderInlineMd(text) {
   let t = escapeMdHtml(text);
   t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -2660,7 +2711,9 @@ function renderInlineMd(text) {
   t = t.replace(/(?<![\w])_([^_]+)_(?![\w])/g, '<em>$1</em>');
   t = t.replace(/\*([^*]+)\*/g, '<em>$1</em>');
   t = t.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+  // Explicit markdown links [text](url) become clickable
   t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  // CHANGE 4: bare URLs (http/https/www) become clickable links in preview
   t = t.replace(/((?<!["'(>=])(?:https?:\/\/|www\.)[^\s<]+)/g, (m)=>{
     let href = m; if (!/^https?:\/\//i.test(href)) href = 'https://'+href;
     return `<a href="${href}" target="_blank" rel="noopener noreferrer">${m}</a>`;
@@ -2739,7 +2792,7 @@ function renderNotesList() {
   const container = document.getElementById('notes-list-scroll');
   const notes = getFilteredNotes();
   if (notes.length===0) {
-    container.innerHTML = `<div class="notes-empty-sidebar">No notes found.<br>Click "＋ New Note" to start writing.</div>`;
+    container.innerHTML = `<div class="notes-empty-sidebar">No notes found.<br>Click "+ New Note" to start writing.</div>`;
     return;
   }
   const activeId = DB.settings.activeNoteId;
@@ -2784,17 +2837,10 @@ function renderNoteEditor() {
   renderNoteColorStrip();
   renderNoteTags();
   updateNoteMeta();
-  const mode = DB.settings.noteMode || 'write';
-  document.getElementById('notes-mode-write').classList.toggle('active', mode==='write');
-  document.getElementById('notes-mode-preview').classList.toggle('active', mode==='preview');
-  const ta = document.getElementById('notes-markdown-textarea');
-  const prev = document.getElementById('notes-preview-render');
-  if (mode==='preview') {
-    ta.style.display='none'; prev.style.display='block';
-    prev.innerHTML = n.body ? renderMarkdown(n.body) : `<div class="notes-preview-empty">Nothing to preview yet — write something first.</div>`;
-  } else {
-    ta.style.display='block'; prev.style.display='none';
-  }
+  // CHANGE 3: use stored noteMode (default is 'preview')
+  const mode = DB.settings.noteMode || 'preview';
+  // setNoteMode handles all the UI switching including dblclick binding
+  setNoteMode(mode);
 }
 // ── CALENDAR & REMINDERS ──────────────────────────────────────────
 const CAL_COLORS = ["#7c5cda","#0ea5d0","#e8455a","#16a85a","#d97706","#f97316","#a3e635","#e879f9"];
@@ -3152,6 +3198,15 @@ function init() {
   document.addEventListener('keydown', e => {
     if (e.key==='Escape') closeModal();
     if ((e.metaKey||e.ctrlKey)&&e.key==='k') { openAddHabit(); e.preventDefault(); }
+    // CHANGE 3: Ctrl+9 (or Cmd+9) toggles between preview and write mode on Note Taker page
+    if ((e.metaKey||e.ctrlKey)&&e.key==='9') {
+      e.preventDefault();
+      const notesPage = document.getElementById('page-notes');
+      if (notesPage && notesPage.classList.contains('active') && getActiveNote()) {
+        const newMode = (DB.settings.noteMode === 'preview') ? 'write' : 'preview';
+        setNoteMode(newMode);
+      }
+    }
   });
 }
 document.addEventListener('DOMContentLoaded', init);
