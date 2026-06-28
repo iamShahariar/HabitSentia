@@ -185,7 +185,7 @@ Never lose your progress.
 Save all your data as:
 
 ```json
-backup.json
+habitsentia.json
 ```
 
 ### Import
