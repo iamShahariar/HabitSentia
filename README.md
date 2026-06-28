@@ -305,9 +305,26 @@ Export your data periodically as a JSON backup file.
 
 **Your all-in-one personal productivity and habit-building companion.**
 
+
 ⭐ Star this repository if you find it useful!
 
 Note: Some Features may require internet, but no login needed anywhere.
 Time to time export data as JSON file so you don't lose progress. 
+
+# Interfaces: 
+<img width="1349" height="610" alt="image" src="https://github.com/user-attachments/assets/94a145a8-d173-4b27-b376-57cfb8137948" />
+<img width="1347" height="600" alt="image" src="https://github.com/user-attachments/assets/a5800c65-8c63-4635-9183-a27a2f6da54e" />
+<img width="1353" height="616" alt="image" src="https://github.com/user-attachments/assets/5384d06a-32e2-4368-a2e7-e9feece74c64" />
+<img width="1349" height="607" alt="image" src="https://github.com/user-attachments/assets/483bb675-5caa-4ca2-bb5f-0741c2231fd5" />
+<img width="1335" height="603" alt="image" src="https://github.com/user-attachments/assets/97c27160-b5c3-4c8f-be30-121a429acf42" />
+<img width="1337" height="613" alt="image" src="https://github.com/user-attachments/assets/45f0f0e0-19c9-47c8-9e76-30c47e913b37" />
+<img width="1356" height="610" alt="image" src="https://github.com/user-attachments/assets/f416895b-eaee-4c21-a874-2af4c83a1c4f" />
+
+
+
+
+
+
+
 
 </div>
