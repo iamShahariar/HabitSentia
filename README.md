@@ -307,4 +307,7 @@ Export your data periodically as a JSON backup file.
 
 ⭐ Star this repository if you find it useful!
 
+Note: Some Features may require internet, but no login needed anywhere.
+Time to time export data as JSON file so you don't lose progress. 
+
 </div>
