@@ -822,6 +822,9 @@ body::after {
 .notes-color-dot-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--transition-fast); }
 .notes-color-dot-btn.selected { border-color: var(--text-primary); transform: scale(1.15); }
 .notes-wordcount { font-size: 10.5px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+/* ══ LATEX ══ */
+.katex-block { display: block; text-align: center; margin: 16px 0; overflow-x: auto; }
+.katex-inline { display: inline; }
 /* ══ RESPONSIVE ══ */
 @media (max-width: 1100px) { :root { --sidebar-width: 270px; } }
 @media (max-width: 900px) {
@@ -856,6 +859,11 @@ body::after {
   .notes-title-input { font-size: 22px; }
 }
 </style>
+<!-- KaTeX for LaTeX rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="window.katexReady=true; if(window.pendingKatexRender) window.pendingKatexRender();"></script>
 </head>
 <body>
 <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
@@ -879,9 +887,6 @@ body::after {
       <div class="nav-section-label">Main</div>
       <button class="nav-btn active" data-page="habits" onclick="switchPage('habits', this)">
         <span class="nav-icon">🎯</span><span class="nav-label">Habit Tracker</span>
-      </button>
-      <button class="nav-btn" data-page="managecols" onclick="switchPage('managecols', this)">
-        <span class="nav-icon">🧱</span><span class="nav-label">Manage Columns</span>
       </button>
       <button class="nav-btn" data-page="trash" onclick="switchPage('trash', this)">
         <span class="nav-icon">🗑️</span><span class="nav-label">Trash</span>
@@ -1072,7 +1077,7 @@ body::after {
         <div class="todo-top-row">
           <div class="todo-input-card">
             <div class="todo-add-row">
-              <input type="text" class="form-input" id="todo-new-title" placeholder="What needs to be done? (URLs become clickable)">
+              <input type="text" class="form-input" id="todo-new-title" placeholder="What needs to be done? Press Enter to add (URLs become clickable)" onkeydown="if(event.key==='Enter')addTodo()">
               <select class="form-select" id="todo-new-priority">
                 <option value="low">🔵 Low</option>
                 <option value="medium" selected>🟡 Medium</option>
@@ -1153,6 +1158,10 @@ body::after {
                 <button class="notes-tb-btn" onclick="mdInsertBlock('\\n---\\n','')" title="Divider">―</button>
               </div>
               <div class="notes-toolbar-group">
+                <button class="notes-tb-btn" onclick="mdWrap('$','$')" title="Inline LaTeX (e.g. $\alpha$)">∑</button>
+                <button class="notes-tb-btn" onclick="mdInsertBlock('$$\n','\n$$')" title="Block LaTeX (e.g. $$ax^2+\beta+c$$)">∫</button>
+              </div>
+              <div class="notes-toolbar-group">
                 <div class="notes-color-strip" id="notes-color-strip"></div>
               </div>
               <button class="notes-tb-btn notes-pin-btn" id="notes-pin-btn" onclick="toggleNotePin()" title="Pin Note">📌</button>
@@ -1171,7 +1180,7 @@ body::after {
                 <span class="notes-wordcount" id="notes-wordcount">0 words</span>
               </div>
               <div class="notes-tags-row" id="notes-tags-row"></div>
-              <textarea class="notes-markdown-textarea" id="notes-markdown-textarea" placeholder="Start writing in Markdown...
+              <textarea class="notes-markdown-textarea" id="notes-markdown-textarea" placeholder="Start writing in Markdown + LaTeX...
 # Heading
 **bold** _italic_ ~~strikethrough~~
 - bullet list
@@ -1179,7 +1188,11 @@ body::after {
 - [ ] checklist item
 > blockquote
 `inline code`
-[link](https://example.com)" oninput="onNoteBodyInput()"></textarea>
+[link](https://example.com)
+
+Inline LaTeX: $\alpha + \beta = \gamma$
+Block LaTeX:
+$$ax^2 + bx + c = 0$$" oninput="onNoteBodyInput()"></textarea>
               <div class="notes-preview-render" id="notes-preview-render" style="display:none"></div>
             </div>
           </div>
@@ -1207,7 +1220,7 @@ body::after {
         <div class="cal-side-card">
           <div class="cal-side-date" id="cal-side-date">Today</div>
           <div class="cal-reminder-form">
-            <input type="text" class="form-input" id="cal-new-title" placeholder="Reminder title (URLs become clickable)">
+            <input type="text" class="form-input" id="cal-new-title" placeholder="Reminder title (press Enter to add)" onkeydown="if(event.key==='Enter')addReminder()">
             <div style="display:flex;gap:8px">
               <input type="date" class="form-input" id="cal-new-date">
               <input type="time" class="form-input" id="cal-new-time">
@@ -2286,7 +2299,7 @@ const pageMeta = {
   managecols: { title:'🧱 Manage Columns',          sub:'Add, rename, reorder, or delete table columns' },
   trash:      { title:'🗑️ Trash',                  sub:'Recover deleted habits or remove them permanently' },
   todo:       { title:'✅ To-Do List',              sub:'Plan, prioritize, and complete your tasks' },
-  notes:      { title:'🗒️ Note Taker',              sub:'Write rich Markdown notes, just like Notion' },
+  notes:      { title:'🗒️ Note Taker',              sub:'Write rich Markdown + LaTeX notes, just like Notion' },
   calendar:   { title:'📆 Calendar & Reminders',    sub:'Plan ahead and never miss a moment' },
   pomodoro:   { title:'🍅 Pomodoro Clock',          sub:'Focus with the Pomodoro technique' },
   stopwatch:  { title:'⏱️ Stopwatch',               sub:'Precision timing with lap tracking' },
@@ -2629,6 +2642,27 @@ function setNoteColor(color) {
   n.color = color; n.modifiedAt = new Date().toISOString();
   saveData(); renderNotesList(); renderNoteColorStrip();
 }
+// ── KaTeX LaTeX rendering helper ──────────────────────────────────
+function renderLatexInElement(el) {
+  if (!el) return;
+  if (window.katexReady && window.renderMathInElement) {
+    try {
+      window.renderMathInElement(el, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$',  right: '$',  display: false}
+        ],
+        throwOnError: false
+      });
+    } catch(e) { console.warn('KaTeX render error:', e); }
+  } else {
+    // Queue for when KaTeX finishes loading
+    window.pendingKatexRender = function() {
+      window.pendingKatexRender = null;
+      renderLatexInElement(el);
+    };
+  }
+}
 // CHANGE 3: setNoteMode switches between write and preview
 // In preview mode, the editor area gets a dblclick listener to switch to write
 function setNoteMode(mode) {
@@ -2647,6 +2681,8 @@ function setNoteMode(mode) {
     prev.innerHTML = n && n.body
       ? `<div class="notes-preview-hint">👁️ Preview — double-click anywhere to edit</div>` + renderMarkdown(n.body)
       : `<div class="notes-preview-hint">👁️ Preview — double-click anywhere to edit</div><div class="notes-preview-empty">Nothing to preview yet — double-click to start writing.</div>`;
+    // Render LaTeX after setting innerHTML
+    renderLatexInElement(prev);
     // CHANGE 3: double-click on editor area switches to write mode
     editorArea.ondblclick = function(e) {
       // Don't intercept clicks on links
@@ -2704,7 +2740,11 @@ function escapeMdHtml(str) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 // CHANGE 4: renderInlineMd handles URL linkification so all preview links are clickable
+// Note: we do NOT escape $ signs here so KaTeX can find them after innerHTML is set
 function renderInlineMd(text) {
+  // Temporarily protect LaTeX inline/block from markdown processing
+  // We use placeholders: split by $ delimiters, process non-latex parts, re-join
+  // Strategy: escape HTML but preserve $ sequences for KaTeX post-processing
   let t = escapeMdHtml(text);
   t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
   t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -2722,7 +2762,23 @@ function renderInlineMd(text) {
 }
 function renderMarkdown(md) {
   if (!md) return '';
-  const lines = md.replace(/\r\n/g,'\n').split('\n');
+  // Pre-process: protect $$ and $ LaTeX blocks from markdown escaping
+  // We replace them with unique placeholders, process markdown, then restore
+  const latexBlocks = [];
+  let processed = md;
+  // Protect block LaTeX $$ ... $$ first (multiline)
+  processed = processed.replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
+    const idx = latexBlocks.length;
+    latexBlocks.push(match);
+    return `\x00LATEXBLOCK${idx}\x00`;
+  });
+  // Protect inline LaTeX $ ... $
+  processed = processed.replace(/\$([^$\n]+?)\$/g, (match) => {
+    const idx = latexBlocks.length;
+    latexBlocks.push(match);
+    return `\x00LATEXINLINE${idx}\x00`;
+  });
+  const lines = processed.replace(/\r\n/g,'\n').split('\n');
   let html = '', inCode=false, codeBuf=[], listType=null, listBuf=[];
   function flushList() {
     if (!listType) return;
@@ -2767,6 +2823,9 @@ function renderMarkdown(md) {
   }
   flushList();
   if (inCode && codeBuf.length) html += `<pre><code>${escapeMdHtml(codeBuf.join('\n'))}</code></pre>`;
+  // Restore LaTeX placeholders — KaTeX will render them after innerHTML is set
+  html = html.replace(/\x00LATEXBLOCK(\d+)\x00/g, (_, idx) => latexBlocks[parseInt(idx)]);
+  html = html.replace(/\x00LATEXINLINE(\d+)\x00/g, (_, idx) => latexBlocks[parseInt(idx)]);
   return html;
 }
 // ── Note Sorting / Search / Render ─────────────────────────────────
@@ -3177,39 +3236,72 @@ function init() {
   if (document.getElementById('pomo-work-input')) {
     document.getElementById('pomo-work-input').value  = sw.pomodoroWorkMinutes||25;
     document.getElementById('pomo-short-input').value = sw.pomodoroBreakMinutes||5;
-    document.getElementById('pomo-long-input').value  = sw.pomodoroLongBreakMinutes||15;
-  }
-  pomoState.sessionsBeforeLong = sw.pomodoroSessionsBeforeLongBreak||4;
-  resetPomo();
-  renderHabits();
-  updateStats();
-  updateSortSelect();
-  renderTrash();
-  renderManageColumns();
-  renderTodos();
-  renderCalendar();
-  renderNotesList();
-  renderNoteEditor();
-  syncHideColsSelect();
-  applyHideCols();
-  applySidebarDefault();
-  syncSidebarDefaultUI();
-  setInterval(()=>saveData(), 30000);
-  document.addEventListener('keydown', e => {
-    if (e.key==='Escape') closeModal();
-    if ((e.metaKey||e.ctrlKey)&&e.key==='k') { openAddHabit(); e.preventDefault(); }
-    // CHANGE 3: Ctrl+9 (or Cmd+9) toggles between preview and write mode on Note Taker page
-    if ((e.metaKey||e.ctrlKey)&&e.key==='9') {
-      e.preventDefault();
-      const notesPage = document.getElementById('page-notes');
-      if (notesPage && notesPage.classList.contains('active') && getActiveNote()) {
-        const newMode = (DB.settings.noteMode === 'preview') ? 'write' : 'preview';
-        setNoteMode(newMode);
-      }
-    }
-  });
+    document.getElementById('pomo-long-input').value  = sw.pomodoroLongBreak||15;
+
 }
+
+pomoState.sessionsBeforeLong = sw.pomodoroSessionsBeforeLongBreak||4;
+
+resetPomo();
+
+renderHabits();
+
+updateStats();
+
+updateSortSelect();
+
+renderTrash();
+
+renderManageColumns();
+
+renderTodos();
+
+renderCalendar();
+
+renderNotesList();
+
+renderNoteEditor();
+
+syncHideColsSelect();
+
+applyHideCols();
+
+applySidebarDefault();
+
+syncSidebarDefaultUI();
+
+setInterval(()=>saveData(), 30000);
+
+document.addEventListener('keydown', e => {
+
+if (e.key==='Escape') closeModal();
+
+if ((e.metaKey||e.ctrlKey)&&e.key==='k') { openAddHabit(); e.preventDefault(); }
+
+// CHANGE 3: Ctrl+9 (or Cmd+9) toggles between preview and write mode on Note Taker page
+
+if ((e.metaKey||e.ctrlKey)&&e.key==='9') {
+
+e.preventDefault();
+
+const notesPage = document.getElementById('page-notes');
+
+if (notesPage && notesPage.classList.contains('active') && getActiveNote()) {
+
+const newMode = (DB.settings.noteMode === 'preview') ? 'write' : 'preview';
+
+setNoteMode(newMode);
+
+}
+
+}
+
+});
+
+}
+
 document.addEventListener('DOMContentLoaded', init);
+
 </script>
 </body>
 </html>
