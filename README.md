@@ -116,7 +116,7 @@ Useful for:
 
 ---
 
-# 📝 Notion-Like Markdown Editor
+# 📝 Note Taker Markdown Editor
 
 A lightweight markdown workspace built directly into the application.
 
@@ -127,9 +127,9 @@ A lightweight markdown workspace built directly into the application.
 * Documentation writing
 * Personal journals
 * Knowledge management
-* LaTeX symbols and equations rendering require the internet
+* LaTeX symbols and equations rendering (requires the internet)
   
-### Export Options
+### Recommended Export Options
 
 ✅ Save as HTML
 
@@ -155,7 +155,7 @@ Save as PDF
 
 # 💾 Local Data Storage
 
-Your data stays on your device.
+Your data stays on your device. You can also save everything in a single JSON file, which you can use later to restore. 
 
 ### How It Works
 
@@ -173,7 +173,7 @@ Your data stays on your device.
 
 ✅ System restart → Data remains
 
-⚠️ Clearing browser storage/cache/site data will permanently remove saved data.
+⚠️ Clearing browser storage/cache/site data will permanently remove saved data. Of course, you can restore from the last saved JSON file. 
 
 ---
 
