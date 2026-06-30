@@ -1,4 +1,4 @@
-# 🌟 Habit Sentia Tracker
+# 🌟 Habit Sentia Tracker (In a Single HTML File)
 
 <div align="center">
 
@@ -127,7 +127,8 @@ A lightweight markdown workspace built directly into the application.
 * Documentation writing
 * Personal journals
 * Knowledge management
-
+* LaTeX symbols and equations rendering require the internet
+  
 ### Export Options
 
 ✅ Save as HTML
@@ -222,7 +223,7 @@ Your productivity data belongs to you.
 
 ---
 
-# 🌐 Browser Based
+# 🌐 Browser-Based
 
 Simply open in a browser and start using.
 
@@ -290,7 +291,7 @@ Export your data periodically as a JSON backup file.
 3. Track Cue → Craving → Action → Reward
 4. Use Pomodoro for focus
 5. Manage tasks with To-Do
-6. Take notes in Markdown Editor
+6. Take notes in the Markdown Editor
 7. Export backups regularly
 8. Grow consistently every day
 ```
@@ -308,8 +309,7 @@ Export your data periodically as a JSON backup file.
 
 ⭐ Star this repository if you find it useful!
 
-Note: Some Features may require internet, but no login needed anywhere.
-Time to time export data as JSON file so you don't lose progress. 
+Note: Some Features may require the internet, for example, to render LaTeX equations and symbols, but no login is needed anywhere.
 
 # Interfaces: 
 <img width="1349" height="610" alt="image" src="https://github.com/user-attachments/assets/94a145a8-d173-4b27-b376-57cfb8137948" />
